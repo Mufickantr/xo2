@@ -1,0 +1,126 @@
+import java.util.Scanner;
+
+public class TicTacToe {
+private static final char X = 'X';
+private static final char O = 'O';
+private static final char EMPTY = ' ';
+
+csharp
+Copy code
+private static char[][] board = new char[3][3];
+private static int xWins = 0;
+private static int oWins = 0;
+private static int ties = 0;
+
+private static int currentPlayer = 1;
+
+private static Scanner scanner = new Scanner(System.in);
+
+private static void initBoard() {
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            board[row][col] = EMPTY;
+        }
+    }
+}
+
+private static void printBoard() {
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            System.out.print(board[row][col] + " ");
+        }
+        System.out.println();
+    }
+}
+
+private static boolean isMoveValid(int row, int col) {
+    if (row < 0 || row >= 3 || col < 0 || col >= 3) {
+        return false;
+    }
+
+    return board[row][col] == EMPTY;
+}
+
+private static boolean hasPlayerWon(char player) {
+    // Check rows
+    for (int row = 0; row < 3; row++) {
+        if (board[row][0] == player && board[row][1] == player && board[row][2] == player) {
+            return true;
+        }
+    }
+
+    // Check columns
+    for (int col = 0; col < 3; col++) {
+        if (board[0][col] == player && board[1][col] == player && board[2][col] == player) {
+            return true;
+        }
+    }
+
+    // Check diagonals
+    if (board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+        return true;
+    }
+
+    if (board[0][2] == player && board[1][1] == player && board[2][0] == player) {
+        return true;
+    }
+
+    return false;
+}
+
+private static void makeMove(char player) {
+    int row;
+    int col;
+
+    do {
+        System.out.print("Игрок " + currentPlayer + ", введите координаты своей фишки (строка, колонка): ");
+
+        row = scanner.nextInt();
+        col = scanner.nextInt();
+
+        if (!isMoveValid(row, col)) {
+            System.out.println("Некорректный ход, попробуйте еще раз: ");
+        }
+    } while (!isMoveValid(row, col));
+
+    board[row][col] = player;
+}
+
+private static void changePlayer() {
+    if (currentPlayer == 1) {
+        currentPlayer = 2;
+    } else {
+        currentPlayer = 1;
+    }
+}
+
+public static void main(String[] args) {
+    initBoard();
+
+    while (true) {
+        printBoard();
+
+        makeMove(currentPlayer == 1 ? X : O);
+
+        if (hasPlayerWon(currentPlayer == 1 ? X : O)) {
+            System.out.println("Игрок " + currentPlayer + " выиграл!");
+            if (currentPlayer == 1) {
+                xWins++;
+            } else {
+                oWins++;
+            }
+            break;
+        }
+
+        if (isBoardFull()) {
+            System.out.println("Ничья!");
+            ties++;
+            break;
+        }
+
+        changePlayer();
+    }
+
+    System.out.println("Результаты: ");
+    System.out.println("Игрок 1 победил " + xWins + " раз");
+    System.out.println("И
